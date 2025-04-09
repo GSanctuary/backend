@@ -27,7 +27,7 @@ jobs:
         run: npm test
 
       - name: Generate env file
-        run: touch src/env.ts && echo "export const env {port:${{ secrets.PORT }},webserver:${{ secrets.WEB_SERVER}}}" > src/env.ts
+        run: touch env.ts && echo "export const env {port:${{ secrets.PORT }},webserver:${{ secrets.WEB_SERVER}}}" > env.ts
 
       - name: Build project
         run: npm run build
