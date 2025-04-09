@@ -12,7 +12,7 @@ export interface RESTHandler {
   run: (
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
   ) => void | Promise<void> | any | Promise<any>;
 }
 export enum RESTMethods {
@@ -54,7 +54,7 @@ const importAllHandlers = async (path: string, failedImports: string[]) => {
           console.error(err);
           failedImports.push(`${file} failed to import`);
         });
-    }),
+    })
   );
 };
 
@@ -62,7 +62,7 @@ server.use(
   cors({
     exposedHeaders: ['filename', 'updatedat'],
     maxAge: 1209600,
-  }),
+  })
 );
 
 server.use(express.json({ limit: '100mb' }));
@@ -81,7 +81,7 @@ if (env?.webserver) {
       //@ts-ignore
       cert: readFileSync(env.webserver?.certPath),
     },
-    server,
+    server
   );
 } else {
   console.log(`HTTP Server running on port ${env.port}`);

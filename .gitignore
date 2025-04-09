@@ -109,3 +109,5 @@ env.ts
 env dev.js
 env dev.ts
 output/
+
+.DS_Store
