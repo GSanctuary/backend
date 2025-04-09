@@ -1,10 +1,10 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response } from 'express';
 const server = express();
-import https from "https";
-import cors from "cors";
-import { env } from "./env";
-import { readFileSync } from "fs";
-import { lstat, readdir } from "fs/promises";
+import https from 'https';
+import cors from 'cors';
+import { env } from './env';
+import { readFileSync } from 'fs';
+import { lstat, readdir } from 'fs/promises';
 
 export interface RESTHandler {
   path: string;
@@ -16,10 +16,10 @@ export interface RESTHandler {
   ) => void | Promise<void> | any | Promise<any>;
 }
 export enum RESTMethods {
-  GET = "get",
-  POST = "post",
-  PUT = "put",
-  DELETE = "delete",
+  GET = 'get',
+  POST = 'post',
+  PUT = 'put',
+  DELETE = 'delete',
 }
 
 /** @type {import('./Helpers/Databases')} */
@@ -33,7 +33,7 @@ const importAllHandlers = async (path: string, failedImports: string[]) => {
         console.log(`Importing Folder ${path}/${file}`);
         return await importAllHandlers(`${path}/${file}`, failedImports);
       }
-      if (!file.endsWith(".ts") && !file.endsWith(".js")) {
+      if (!file.endsWith('.ts') && !file.endsWith('.js')) {
         return;
       }
       import(`${path}/${file}`)
@@ -60,15 +60,15 @@ const importAllHandlers = async (path: string, failedImports: string[]) => {
 
 server.use(
   cors({
-    exposedHeaders: ["filename", "updatedat"],
+    exposedHeaders: ['filename', 'updatedat'],
     maxAge: 1209600,
   }),
 );
 
-server.use(express.json({ limit: "100mb" }));
+server.use(express.json({ limit: '100mb' }));
 const failedImports = [] as string[];
 importAllHandlers(`${__dirname}/RESTAPI`, failedImports).then(() => {
-  console.log("Loaded all handlers");
+  console.log('Loaded all handlers');
   console.log(`${failedImports.length} handlers failed to load`, failedImports);
 });
 //Import all REST Endpoints
@@ -88,7 +88,7 @@ if (env?.webserver) {
   server.listen(env.port);
 }
 
-process.on("unhandledRejection", (reason, p) => {
-  console.trace("Unhandled Rejection at: Promise", p, "reason:", reason);
+process.on('unhandledRejection', (reason, p) => {
+  console.trace('Unhandled Rejection at: Promise', p, 'reason:', reason);
   // application specific logging, throwing an error, or other logic here
 });
