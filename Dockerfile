@@ -5,6 +5,6 @@ RUN apt-get update && apt-get install -y git
 
 WORKDIR /app
 COPY package.json /app
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . /app
 CMD ["npm","run", "dev"]
