@@ -111,3 +111,4 @@ env dev.ts
 output/
 
 .DS_Store
+.env.dev
