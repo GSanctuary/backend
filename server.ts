@@ -6,14 +6,16 @@ import { env } from './env';
 import { readFileSync } from 'fs';
 import { lstat, readdir } from 'fs/promises';
 
-export interface RESTHandler {
+export type RESTHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => void | Promise<void> | any | Promise<any>;
+
+export interface RESTRoute {
   path: string;
   method: RESTMethods;
-  run: (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => void | Promise<void> | any | Promise<any>;
+  run: RESTHandler;
 }
 export enum RESTMethods {
   GET = 'get',
@@ -39,7 +41,7 @@ const importAllHandlers = async (path: string, failedImports: string[]) => {
       import(`${path}/${file}`)
         .then((module) => {
           console.log(`${file} imported`);
-          const handler = module.default as RESTHandler;
+          const handler = module.default as RESTRoute;
           if (!handler) {
             return failedImports.push(`${file} is not a REST handler`);
           }

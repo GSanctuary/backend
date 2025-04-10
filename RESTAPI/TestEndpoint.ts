@@ -1,4 +1,4 @@
-import { RESTHandler, RESTMethods } from '../server';
+import { RESTRoute, RESTMethods } from '../server';
 
 export const TestEndpoint = {
   path: '/test',
@@ -6,6 +6,6 @@ export const TestEndpoint = {
   run: async (req, res, next) => {
     res.send('hello vro');
   },
-} as RESTHandler;
+} as RESTRoute;
 
 export default TestEndpoint;
