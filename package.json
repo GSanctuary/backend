@@ -7,7 +7,8 @@
     "test": "echo \"test\" && exit 0",
     "start": "node output/server.js",
     "build": "tsc",
-    "dev": "ts-node server.ts"
+    "dev": "ts-node server.ts",
+    "dev:migrate": "npx prisma migrate deploy && ts-node server.ts"
   },
   "repository": {
     "type": "git",

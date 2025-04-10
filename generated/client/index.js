@@ -137,6 +137,10 @@ const config = {
       {
         "fromEnvVar": null,
         "value": "linux-musl-arm64-openssl-3.0.x"
+      },
+      {
+        "fromEnvVar": null,
+        "value": "linux-arm64-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -144,7 +148,8 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.6.0",
@@ -153,17 +158,16 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": null
+        "value": "postgresql://prisma.dolaepmsrnlduceqymzb:prisma@aws-0-us-west-1.pooler.supabase.com:5432/postgres"
       }
     }
   },
-  "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"linux-musl-arm64-openssl-3.0.x\"]\n  output        = \"../generated/client\"\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  apiKey    String   @unique\n}\n",
-  "inlineSchemaHash": "0ec127074a8d25fe2d1167848ea267453db7292517d7fe190d6b5afdf4243aad",
+  "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"linux-musl-arm64-openssl-3.0.x\", \"linux-arm64-openssl-3.0.x\"]\n  output        = \"../generated/client\"\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  apiKey    String   @unique\n}\n",
+  "inlineSchemaHash": "50e88761517e8330ee79a0d1c5f432fa9dc5e408799bc597e40543a260686876",
   "copyEngine": true
 }
 
@@ -208,6 +212,10 @@ path.join(process.cwd(), "generated/client/libquery_engine-darwin-arm64.dylib.no
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node");
 path.join(process.cwd(), "generated/client/libquery_engine-linux-musl-arm64-openssl-3.0.x.so.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-linux-arm64-openssl-3.0.x.so.node");
+path.join(process.cwd(), "generated/client/libquery_engine-linux-arm64-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "generated/client/schema.prisma")
