@@ -112,3 +112,4 @@ output/
 
 .DS_Store
 .env.dev
+generated/
