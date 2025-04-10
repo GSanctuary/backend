@@ -5,6 +5,7 @@ import cors from 'cors';
 import { env } from './env';
 import { readFileSync } from 'fs';
 import { lstat, readdir } from 'fs/promises';
+import prisma from './lib/prisma';
 
 export type RESTHandler = (
   req: Request,
@@ -16,6 +17,7 @@ export interface RESTRoute {
   path: string;
   method: RESTMethods;
   run: RESTHandler;
+  needsAuth?: boolean;
 }
 export enum RESTMethods {
   GET = 'get',
@@ -23,6 +25,27 @@ export enum RESTMethods {
   PUT = 'put',
   DELETE = 'delete',
 }
+
+const verifyApiKey = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const apiKey = req.headers['x-api-key'] as string;
+  if (!apiKey) {
+    return res.status(401).json({ error: 'No API key provided' });
+  }
+  const user = await prisma.user.findUnique({
+    where: {
+      apiKey,
+    },
+  });
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid API key' });
+  }
+  req.user = user;
+  next();
+};
 
 /** @type {import('./Helpers/Databases')} */
 const importAllHandlers = async (path: string, failedImports: string[]) => {
@@ -46,9 +69,20 @@ const importAllHandlers = async (path: string, failedImports: string[]) => {
             return failedImports.push(`${file} is not a REST handler`);
           }
           console.log(handler);
-          server[handler.method](handler.path, async (req, res, next) => {
-            handler.run(req as Request, res as Response, next);
-          });
+          if (handler.needsAuth) {
+            server[handler.method](
+              handler.path,
+              verifyApiKey,
+              async (req, res, next) => {
+                handler.run(req as Request, res as Response, next);
+              },
+            );
+          } else {
+            server[handler.method](handler.path, async (req, res, next) => {
+              handler.run(req as Request, res as Response, next);
+            });
+          }
+
           console.log(`Loaded ${file}`);
         })
         .catch((err) => {
