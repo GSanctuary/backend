@@ -1,9 +1,13 @@
 import { randomUUID } from 'crypto';
-import { RESTHandler, RESTMethods } from '../../server';
+import { RESTRoute, RESTMethods, RESTHandler } from '../../server';
 import prisma from '../../lib/prisma';
 import { NextFunction, Request, Response } from 'express';
 
-const handler = async (_req: Request, res: Response, next: NextFunction) => {
+const handler: RESTHandler = async (
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
   const randomUuid = randomUUID();
 
   const user = await prisma.user.create({
@@ -12,13 +16,13 @@ const handler = async (_req: Request, res: Response, next: NextFunction) => {
     },
   });
 
-  res.json({ user });
+  res.json({ user }).status(201);
 };
 
 export const GetCredential = {
   path: '/user',
-  method: RESTMethods.GET,
+  method: RESTMethods.POST,
   run: handler,
-} as RESTHandler;
+} as RESTRoute;
 
 export default GetCredential;
