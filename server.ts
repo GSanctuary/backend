@@ -53,14 +53,17 @@ const validateSchema =
   (schema: ZodSchema | undefined) =>
   (req: Request, res: Response, next: NextFunction) => {
     if (schema) {
-      try {
-        const result = schema.parse(req.body);
+      const result = schema.safeParse(req.body);
+      if (result.success) {
         next();
         return;
-      } catch (err) {
+      } else {
+        const errors = result.error.errors.map((error) => ({
+          message: error.message,
+        }));
         return res.status(400).json({
           error: 'Invalid request body',
-          details: (err as ZodError).errors,
+          details: errors,
         });
       }
     }
