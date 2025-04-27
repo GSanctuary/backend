@@ -14,4 +14,26 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   apiKey  String   @unique
+  AIConversations AIConversation[]
+}
+
+model AIConversation {
+  id        Int   @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  user      User   @relation(fields: [userId], references: [id])
+  title    String
+  AIMessage AIMessage[]
+}
+
+model AIMessage {
+  id              Int   @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  conversationId  Int
+  role            String
+  prompt          String
+  response        String
+  conversation    AIConversation @relation(fields: [conversationId], references: [id])
 }
