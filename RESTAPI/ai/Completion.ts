@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { RESTHandler, RESTMethods, RESTRoute } from '../../server';
 import prisma from '../../lib/prisma';
+import { GeminiClient, toContext } from '../../services/gemini';
 
-const CONTEXT_MESSAGE_LENGTH = 10;
+const CONTEXT_MESSAGE_LENGTH = 25;
 
 const schema = z.object({
   prompt: z.string().min(1, 'Prompt is required'),
@@ -44,9 +45,19 @@ const handler: RESTHandler = async (req, res, next) => {
     take: CONTEXT_MESSAGE_LENGTH,
   });
 
-  // TODO: Call OpenAI API with the prompt and messages
+  const context = messages.map(toContext).reverse();
+  const client = GeminiClient.getInstance();
+  const response = await client.addContexts(context).ask(prompt).chat();
 
-  res.status(201).json({ messages });
+  const createdMessage = await prisma.aIMessage.create({
+    data: {
+      prompt,
+      response,
+      conversationId,
+    },
+  });
+
+  res.status(201).json({ createdMessage });
 };
 
 export const Completion: RESTRoute = {
