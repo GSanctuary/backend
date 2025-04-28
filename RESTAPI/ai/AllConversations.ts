@@ -32,7 +32,7 @@ const handler: RESTHandler = async (req, res, next) => {
 
 export const AllConversations: RESTRoute = {
   method: RESTMethods.GET,
-  path: '/ai/conversations',
+  path: '/ai/conversation',
   run: handler,
   needsAuth: true,
   schema,

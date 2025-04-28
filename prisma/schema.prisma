@@ -32,7 +32,6 @@ model AIMessage {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   conversationId  Int
-  role            String
   prompt          String
   response        String
   conversation    AIConversation @relation(fields: [conversationId], references: [id])
