@@ -6,6 +6,7 @@ import { env } from './env';
 import { readFileSync } from 'fs';
 import { lstat, readdir } from 'fs/promises';
 import prisma from './lib/prisma';
+import { ZodError, ZodSchema } from 'zod';
 
 export type RESTHandler = (
   req: Request,
@@ -18,6 +19,7 @@ export interface RESTRoute {
   method: RESTMethods;
   run: RESTHandler;
   needsAuth?: boolean;
+  schema?: ZodSchema;
 }
 export enum RESTMethods {
   GET = 'get',
@@ -47,6 +49,27 @@ const verifyApiKey = async (
   next();
 };
 
+const validateSchema =
+  (schema: ZodSchema | undefined) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    if (schema) {
+      const result = schema.safeParse(req.body);
+      if (result.success) {
+        next();
+        return;
+      } else {
+        const errors = result.error.errors.map((error) => ({
+          message: error.message,
+        }));
+        return res.status(400).json({
+          error: 'Invalid request body',
+          details: errors,
+        });
+      }
+    }
+    next();
+  };
+
 /** @type {import('./Helpers/Databases')} */
 const importAllHandlers = async (path: string, failedImports: string[]) => {
   await Promise.all(
@@ -73,14 +96,19 @@ const importAllHandlers = async (path: string, failedImports: string[]) => {
             server[handler.method](
               handler.path,
               verifyApiKey,
+              validateSchema(handler.schema),
               async (req, res, next) => {
                 handler.run(req as Request, res as Response, next);
               },
             );
           } else {
-            server[handler.method](handler.path, async (req, res, next) => {
-              handler.run(req as Request, res as Response, next);
-            });
+            server[handler.method](
+              handler.path,
+              validateSchema(handler.schema),
+              async (req, res, next) => {
+                handler.run(req as Request, res as Response, next);
+              },
+            );
           }
 
           console.log(`Loaded ${file}`);
