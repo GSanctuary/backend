@@ -16,7 +16,7 @@ const handler: RESTHandler = async (
     },
   });
 
-  res.json({ user }).status(201);
+  return res.status(201).json({ user });
 };
 
 export const GetCredential = {

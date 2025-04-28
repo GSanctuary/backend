@@ -8,7 +8,7 @@ const handler: RESTHandler = async (
   _next: NextFunction,
 ) => {
   const users = await prisma.user.findMany();
-  res.json({ users }).status(200);
+  res.json({ users });
 };
 
 export const AllUsers: RESTRoute = {
