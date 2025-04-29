@@ -9,6 +9,10 @@ const handler: RESTHandler = async (req, res, next) => {
   const { id } = req.params;
   const conversationId = parseInt(id, 10);
 
+  if (isNaN(conversationId)) {
+    return res.status(400).json({ error: 'Invalid conversation ID' });
+  }
+
   const messages = await prisma.aIMessage.findMany({
     where: {
       conversationId,
