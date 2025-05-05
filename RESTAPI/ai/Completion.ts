@@ -47,7 +47,7 @@ const handler: RESTHandler = async (req, res, next) => {
 
   const context = messages.map(toContext).reverse();
   const client = GeminiClient.getInstance();
-  const response = await client.addContexts(context).ask(prompt).chat();
+  const response = await client.clearContexts().addContexts(context).ask(prompt).chat();
 
   const createdMessage = await prisma.aIMessage.create({
     data: {

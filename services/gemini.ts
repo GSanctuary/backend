@@ -14,10 +14,10 @@ export const toContext = ({
   response: string;
 }): Context => ({ prompt, response });
 
-const SYSTEM_INSTRUCTION = `You are a helpful assistant. You will be given a context and a prompt. Your task is to generate a response based on the context and the prompt. The context will be in the format of <CONTEXT>...</CONTEXT>. The prompt will be provided after the context. You should not include the context in your response. Your response should be a single string.`;
+const ASSISTENT_SYSTEM_INSTRUCTION = `You are a helpful assistant. You will be given a context and a prompt. Your task is to generate a response based on the context and the prompt. The context will be in the format of <CONTEXT>...</CONTEXT>. The prompt will be provided after the context. You should not include the context in your response. Your response should be a single string.`;
 
 const DEFAULT_CONFIG: GenerateContentConfig = {
-  systemInstruction: SYSTEM_INSTRUCTION,
+  systemInstruction: ASSISTENT_SYSTEM_INSTRUCTION,
   maxOutputTokens: 4096,
   temperature: 0.5,
 };
@@ -29,18 +29,19 @@ export class GeminiClient {
   private config: GenerateContentConfig = DEFAULT_CONFIG;
   private static instance: GeminiClient | undefined = undefined;
 
-  private constructor() {
+  private constructor(config: GenerateContentConfig = DEFAULT_CONFIG) {
     this.client = new GoogleGenAI({
       apiKey: env.GEMINI_API_KEY,
     });
+    this.config = config;
   }
 
-  static getInstance = (): GeminiClient => {
+  static getInstance(config: GenerateContentConfig = DEFAULT_CONFIG): GeminiClient {
     if (!GeminiClient.instance) {
-      GeminiClient.instance = new GeminiClient();
+      GeminiClient.instance = new GeminiClient(config);
     }
     return GeminiClient.instance;
-  };
+  }
 
   ask = (prompt: string): GeminiClient => {
     this.prompt = prompt;
@@ -54,6 +55,11 @@ export class GeminiClient {
 
   addContexts = (contexts: Context[]): GeminiClient => {
     this.contexts = [...this.contexts, ...contexts];
+    return this;
+  };
+
+  clearContexts = (): GeminiClient => {
+    this.contexts = [];
     return this;
   };
 
@@ -84,3 +90,4 @@ export class GeminiClient {
     return `<CONTEXT>\n${this.buildContext()}</CONTEXT>\n${this.prompt}`;
   };
 }
+
