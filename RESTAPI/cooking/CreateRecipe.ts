@@ -21,10 +21,12 @@ const handler: RESTHandler = async (req, res, next) => {
   return res.status(201).json({ recipe });
 }
 
-export const CreateRecipe: RESTRoute = {
+const CreateRecipe: RESTRoute = {
   method: RESTMethods.POST,
-  path: "/cook/",
+  path: "/cook",
   schema,
   run: handler,
   needsAuth: true,
 }
+
+export default CreateRecipe;

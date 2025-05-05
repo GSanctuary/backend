@@ -27,21 +27,14 @@ export class GeminiClient {
   private contexts: Context[] = [];
   private prompt: string = '';
   private config: GenerateContentConfig = DEFAULT_CONFIG;
-  private static instance: GeminiClient | undefined = undefined;
 
-  private constructor(config: GenerateContentConfig = DEFAULT_CONFIG) {
+  constructor(config: GenerateContentConfig = DEFAULT_CONFIG) {
     this.client = new GoogleGenAI({
       apiKey: env.GEMINI_API_KEY,
     });
     this.config = config;
   }
 
-  static getInstance(config: GenerateContentConfig = DEFAULT_CONFIG): GeminiClient {
-    if (!GeminiClient.instance) {
-      GeminiClient.instance = new GeminiClient(config);
-    }
-    return GeminiClient.instance;
-  }
 
   ask = (prompt: string): GeminiClient => {
     this.prompt = prompt;
@@ -90,4 +83,3 @@ export class GeminiClient {
     return `<CONTEXT>\n${this.buildContext()}</CONTEXT>\n${this.prompt}`;
   };
 }
-
