@@ -15,6 +15,7 @@ model User {
   updatedAt DateTime @updatedAt
   apiKey  String   @unique
   AIConversations AIConversation[]
+  Recipes   Recipe[]
 }
 
 model AIConversation {
@@ -35,4 +36,14 @@ model AIMessage {
   prompt          String
   response        String
   conversation    AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Recipe {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  name String
+  description String?
 }

@@ -35,7 +35,6 @@ export const AllConversations: RESTRoute = {
   path: '/ai/conversation',
   run: handler,
   needsAuth: true,
-  schema,
 };
 
 export default AllConversations;
