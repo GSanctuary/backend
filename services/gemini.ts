@@ -35,7 +35,6 @@ export class GeminiClient {
     this.config = config;
   }
 
-
   ask = (prompt: string): GeminiClient => {
     this.prompt = prompt;
     return this;

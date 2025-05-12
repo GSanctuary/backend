@@ -17,10 +17,6 @@ const handler: RESTHandler = async (req, res, next) => {
     where: {
       userId: req.user.id,
     },
-    select: {
-      title: true,
-      createdAt: true,
-    },
     orderBy: {
       createdAt: 'desc',
     },
