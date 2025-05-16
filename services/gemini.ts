@@ -14,7 +14,7 @@ export const toContext = ({
   response: string;
 }): Context => ({ prompt, response });
 
-const ASSISTENT_SYSTEM_INSTRUCTION = `You are a helpful assistant. You will be given a context and a prompt. Your task is to generate a response based on the context and the prompt. The context will be in the format of <CONTEXT>...</CONTEXT>. The prompt will be provided after the context. You should not include the context in your response. Your response should be a single string.`;
+const ASSISTENT_SYSTEM_INSTRUCTION = `You are a helpful butler. You will be given a context and a prompt. Your task is to generate a response based on the context and the prompt. The context will be in the format of <CONTEXT>...</CONTEXT>. The prompt will be provided after the context. You should not include the context in your response. Your response should be a single string.`;
 
 const DEFAULT_CONFIG: GenerateContentConfig = {
   systemInstruction: ASSISTENT_SYSTEM_INSTRUCTION,
@@ -56,6 +56,7 @@ export class GeminiClient {
   };
 
   chat = async (): Promise<string> => {
+    console.log('Contexts:', this.buildPrompt());
     const response = await this.client.models
       .generateContent({
         model: 'gemini-2.0-flash',
@@ -74,11 +75,15 @@ export class GeminiClient {
 
   private buildContext = (): string => {
     return this.contexts
-      .map((context) => `${context.prompt}\n${context.response}`)
+      .map(
+        (context) => `Prompt: ${context.prompt}\nResponse: ${context.response}`,
+      )
       .join('\n');
   };
 
   private buildPrompt = (): string => {
-    return `<CONTEXT>\n${this.buildContext()}</CONTEXT>\n${this.prompt}`;
+    return `<CONTEXT>\n${this.buildContext()}</CONTEXT>\nPrompt: ${
+      this.prompt
+    }`;
   };
 }
