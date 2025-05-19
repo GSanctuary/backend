@@ -91,7 +91,9 @@ const importAllHandlers = async (path: string, failedImports: string[]) => {
           if (!handler) {
             return failedImports.push(`${file} is not a REST handler`);
           }
-          console.log(handler);
+          console.log(
+            `Route loaded: ${handler.method.toUpperCase()} ${handler.path}`,
+          );
           if (handler.needsAuth) {
             server[handler.method](
               handler.path,
