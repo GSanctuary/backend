@@ -1,0 +1,31 @@
+{
+  "Generic REST Route Skeleton": {
+    "prefix": "restroute",
+    "body": [
+      "import { z } from 'zod';",
+      "import { RESTHandler, RESTMethods, RESTRoute } from '../../server';",
+      "import prisma from '../../lib/prisma';",
+      "",
+      "const schema = z.object({});",
+      "",
+      "const handler: RESTHandler = async (req, res, next) => {",
+      "  if (!req.user) {",
+      "    return res.status(401).json({ error: 'Unauthorized' });",
+      "  }",
+      "",
+      "  // Implement logic here",
+      "",
+      "};",
+      "",
+      "const ${TM_FILENAME_BASE}: RESTRoute = {",
+      "  method: RESTMethods.${1|POST,GET,PUT,DELETE|},",
+      "  needsAuth: true,",
+      "  path: '/${2:resource}/${3:action}/',",
+      "  run: handler,",
+      "};",
+      "",
+      "export default ${TM_FILENAME_BASE};"
+    ],
+    "description": "Generic REST route template with auth guard and empty schema"
+  }
+}
