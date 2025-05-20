@@ -18,6 +18,9 @@ const handler: RESTHandler = async (req, res, next) => {
       },
       skip: pageSize * (pageNumber - 1),
       take: pageSize,
+      orderBy: {
+        createdAt: 'desc',
+      },
     }),
   ]);
 
