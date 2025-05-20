@@ -6,8 +6,16 @@ const handler: RESTHandler = async (req, res, next) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const pageNumber = parseInt(req.query.pageNumber as string) || 1;
-  const pageSize = parseInt(req.query.pageSize as string) || 10;
+  let pageNumber = parseInt(req.query.pageNumber as string);
+  let pageSize = parseInt(req.query.pageSize as string);
+
+  if (isNaN(pageNumber) || pageNumber <= 0) {
+    pageNumber = 1;
+  }
+
+  if (isNaN(pageSize) || pageSize <= 0) {
+    pageSize = 10;
+  }
 
   const [count, tasks] = await prisma.$transaction([
     prisma.task.count({ where: { userId: req.user.id, completed: false } }),
