@@ -201,10 +201,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@google/genai@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-0.10.0.tgz#1a3ae479b36e242c5077dd471f2d1f4faaacaf9f"
-  integrity sha512-LAbp0em5A+wRtQR2+r5ckRBg2U2cBy8cJHgyTHa9PUbK8zucApw6A93HWyom/qlUQBNCpnIHFp20RiJuYMQwAw==
+"@google/genai@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.0.1.tgz#ccef337f733f27fdc2e5bf741af51889e2847082"
+  integrity sha512-qf8sq9vpuKUeBKukAn43z2eC1I/Jw63b9wo6O+1x3EIroF3oDouJOtW1AzwvfO+9gzCPfLjuCUONhMKiBC8vkQ==
   dependencies:
     google-auth-library "^9.14.2"
     ws "^8.18.0"
