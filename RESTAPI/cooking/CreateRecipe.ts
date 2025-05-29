@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { RESTHandler, RESTMethods, RESTRoute } from '../../server';
 import prisma from '../../lib/prisma';
 import { Type } from '@google/genai';
-import gemini from '../../lib/gemini';
+import gemini, { promptRecipe } from '../../lib/gemini';
 
 const schema = z.object({
   recipeName: z.string().nonempty().max(100),
@@ -32,12 +32,7 @@ const handler: RESTHandler = async (req, res, next) => {
 
   const response = await gemini.models.generateContent({
     model: 'gemini-2.0-flash',
-    contents: `You are an expert at writing recipies for individuals to make at home within reasonable cost ranges, feeding for individuals or families.
-    You will provide ingredients with specific amounts of common units along with detailed steps for all recipies you provide. With each step, ensure to
-    include proper descriptors, the ingredients used, and, if applicable, the amount of time needed for each step. If needed, also provide warnings for
-    common mistakes a person may make.
-    
-    Please provide a recipe for: ${recipeName}`,
+    contents: promptRecipe(recipeName),
     config: {
       responseMimeType: 'application/json',
       responseSchema: {
