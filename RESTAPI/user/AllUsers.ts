@@ -13,7 +13,7 @@ const handler: RESTHandler = async (
 
 export const AllUsers: RESTRoute = {
   method: RESTMethods.GET,
-  path: '/user',
+  path: '/user/all',
   run: handler,
 };
 
