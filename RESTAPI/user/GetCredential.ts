@@ -20,7 +20,7 @@ const handler: RESTHandler = async (
 };
 
 export const GetCredential = {
-  path: '/user',
+  path: '/user/credential',
   method: RESTMethods.POST,
   run: handler,
 } as RESTRoute;
