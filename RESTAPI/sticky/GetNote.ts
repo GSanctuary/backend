@@ -37,6 +37,7 @@ const GetNote: RESTRoute = {
   needsAuth: true,
   path: '/sticky/',
   run: handler,
+  schema,
 };
 
 export default GetNote;

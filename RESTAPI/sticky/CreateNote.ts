@@ -30,6 +30,7 @@ const CreateNote: RESTRoute = {
   needsAuth: true,
   path: '/sticky/',
   run: handler,
+  schema,
 };
 
 export default CreateNote;

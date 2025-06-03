@@ -43,6 +43,7 @@ const UpdateNote: RESTRoute = {
   needsAuth: true,
   path: '/sticky/',
   run: handler,
+  schema,
 };
 
 export default UpdateNote;
