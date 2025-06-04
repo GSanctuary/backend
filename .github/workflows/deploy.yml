@@ -54,5 +54,5 @@ jobs:
           sudo docker service create \
             --name ${{ secrets.IMAGE }} \
             --replicas 1 \
-            --network prod-network
+            --network prod-network \
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE }}:latest \
