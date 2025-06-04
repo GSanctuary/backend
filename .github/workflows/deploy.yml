@@ -41,6 +41,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Init swarm
+        run: |
+          sudo docker swarm init || true
+
+      - name: Create network
+        run: |
+          sudo docker network create --driver overlay prod-network || true
+
       - name: Remove existing service
         run: |
           sudo docker service rm ${{ secrets.IMAGE }} || true
