@@ -36,7 +36,7 @@ jobs:
     needs: build_docker_hub_image
     runs-on:
       group: EC2
-      labels: [self-hosted, linux, deploy]
+      labels: [self-hosted, deploy]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
