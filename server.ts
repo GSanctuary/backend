@@ -7,6 +7,7 @@ import { readFileSync } from 'fs';
 import { lstat, readdir } from 'fs/promises';
 import prisma from './lib/prisma';
 import { ZodError, ZodSchema } from 'zod';
+import { createServer } from 'http';
 
 export type RESTHandler = (
   req: Request,
@@ -158,3 +159,5 @@ process.on('unhandledRejection', (reason, p) => {
   console.trace('Unhandled Rejection at: Promise', p, 'reason:', reason);
   // application specific logging, throwing an error, or other logic here
 });
+
+export default server;
