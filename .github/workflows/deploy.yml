@@ -43,15 +43,15 @@ jobs:
 
       - name: Remove existing service
         run: |
-          docker service rm ${{ secrets.IMAGE }} || true
+          sudo docker service rm ${{ secrets.IMAGE }} || true
 
       - name: Pull latest Docker image
         run: |
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE }}:latest
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.IMAGE }}:latest
 
       - name: Deploy new service
         run: |
-          docker service create \
+          sudo docker service create \
             --name ${{ secrets.IMAGE }} \
             --replicas 1 \
             --network prod-network
