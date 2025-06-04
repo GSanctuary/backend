@@ -5,7 +5,7 @@ import { getRecipe } from '../../services/cooking';
 
 const schema = z.object({
   recipeName: z.string().nonempty().max(100),
-})
+});
 
 const handler: RESTHandler = async (req, res, next) => {
   if (!req.user) {
@@ -25,14 +25,14 @@ const handler: RESTHandler = async (req, res, next) => {
 
   const recipeInfo = await getRecipe(recipe.name);
 
-  return res.status(200).json({...recipeInfo});
-}
+  return res.status(200).json({ ...recipeInfo });
+};
 
 const GetRecipe: RESTRoute = {
   method: RESTMethods.GET,
   needsAuth: true,
   path: '/cook/',
   run: handler,
-}
+};
 
 export default GetRecipe;
