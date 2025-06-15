@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { RESTHandler, RESTMethods, RESTRoute } from '../../server';
 import prisma from '../../lib/prisma';
-import { parse } from 'path';
 
 const handler: RESTHandler = async (req, res, next) => {
   if (!req.user) {
