@@ -1,10 +1,7 @@
 import { z } from 'zod';
 import { RESTHandler, RESTMethods, RESTRoute } from '../../server';
 import prisma from '../../lib/prisma';
-
-const schema = z.object({
-  id: z.number().int().positive('Note ID must be a positive integer'),
-});
+import { parse } from 'path';
 
 const handler: RESTHandler = async (req, res, next) => {
   if (!req.user) {
@@ -12,7 +9,8 @@ const handler: RESTHandler = async (req, res, next) => {
   }
 
   // Implement logic here
-  const { id } = schema.parse(req.query);
+  const { id: rawId } = req.query;
+  const id = parseInt(rawId as string, 10);
   const note = await prisma.stickyNote.delete({
     where: {
       id,
