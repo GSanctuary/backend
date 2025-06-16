@@ -2,17 +2,23 @@ import { z } from 'zod';
 import { RESTHandler, RESTMethods, RESTRoute } from '../../server';
 import prisma from '../../lib/prisma';
 
-const schema = z.object({
-  id: z.number().int().positive('Note ID must be a positive integer'),
-});
-
 const handler: RESTHandler = async (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   // Implement logic here
-  const { id } = schema.parse(req.query);
+  const { id: rawId } = req.query;
+
+  if (typeof rawId !== 'string') {
+    return res.status(400).json({ error: 'Invalid note ID' });
+  }
+
+  const id = parseInt(rawId, 10);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid note ID' });
+  }
+
   const note = await prisma.stickyNote.delete({
     where: {
       id,
