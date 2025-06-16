@@ -6,8 +6,7 @@ import { env } from './env';
 import { readFileSync } from 'fs';
 import { lstat, readdir } from 'fs/promises';
 import prisma from './lib/prisma';
-import { ZodError, ZodSchema } from 'zod';
-import { createServer } from 'http';
+import { ZodSchema } from 'zod';
 
 export type RESTHandler = (
   req: Request,
