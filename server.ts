@@ -6,7 +6,7 @@ import { env } from './env';
 import { readFileSync } from 'fs';
 import { lstat, readdir } from 'fs/promises';
 import prisma from './lib/prisma';
-import { ZodSchema } from 'zod';
+import { ZodIssue, ZodSchema } from 'zod';
 
 export type RESTHandler = (
   req: Request,
@@ -49,6 +49,14 @@ const verifyApiKey = async (
   next();
 };
 
+const prettifyError = (error: ZodIssue) => {
+  return {
+    field: error.path.join('.'),
+    message: error.message,
+    code: error.code,
+  };
+};
+
 const validateSchema =
   (schema: ZodSchema | undefined) =>
   (req: Request, res: Response, next: NextFunction) => {
@@ -58,12 +66,9 @@ const validateSchema =
         next();
         return;
       } else {
-        const errors = result.error.errors.map((error) => ({
-          message: error.message,
-        }));
         return res.status(400).json({
           error: 'Invalid request body',
-          details: errors,
+          details: result.error.errors.map(prettifyError),
         });
       }
     }
