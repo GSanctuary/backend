@@ -9,7 +9,16 @@ const handler: RESTHandler = async (req, res, next) => {
 
   // Implement logic here
   const { id: rawId } = req.query;
-  const id = parseInt(rawId as string, 10);
+
+  if (typeof rawId !== 'string') {
+    return res.status(400).json({ error: 'Invalid note ID' });
+  }
+
+  const id = parseInt(rawId, 10);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid note ID' });
+  }
+
   const note = await prisma.stickyNote.delete({
     where: {
       id,
