@@ -75,6 +75,21 @@ const validateSchema =
     next();
   };
 
+const logging = (req: Request, res: Response, next: NextFunction) => {
+  const start = Date.now();
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(
+      `${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`,
+    );
+  });
+
+  next();
+};
+
+server.use(logging);
+
 /** @type {import('./Helpers/Databases')} */
 const importAllHandlers = async (path: string, failedImports: string[]) => {
   await Promise.all(
