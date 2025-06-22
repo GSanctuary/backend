@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { RESTHandler, RESTMethods, RESTRoute } from '../../server';
 import prisma from '../../lib/prisma';
-import { Type } from '@google/genai';
-import gemini, { promptRecipe } from '../../lib/gemini';
+import { COOKING_CONFIG, GeminiClient } from '../../services/gemini';
 
 const schema = z.object({
   recipeName: z.string().nonempty().max(100),
@@ -30,31 +29,7 @@ const handler: RESTHandler = async (req, res, next) => {
     return res.status(409).json({ error: 'Recipe already exists' });
   }
 
-  const response = await gemini.models.generateContent({
-    model: 'gemini-2.0-flash',
-    contents: promptRecipe(recipeName),
-    config: {
-      responseMimeType: 'application/json',
-      responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          ingredients: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.STRING,
-            },
-          },
-          steps: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.STRING,
-            },
-          },
-        },
-        propertyOrdering: ['ingredients', 'steps'],
-      },
-    },
-  });
+  const response = await new GeminiClient(COOKING_CONFIG).recipe(recipeName);
 
   try {
     const output = recipeSchema.parse(response.text!);
