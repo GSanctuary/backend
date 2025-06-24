@@ -6,7 +6,7 @@ import { env } from './env';
 import { readFileSync } from 'fs';
 import { lstat, readdir } from 'fs/promises';
 import prisma from './lib/prisma';
-import { ZodError, ZodSchema } from 'zod';
+import { ZodIssue, ZodSchema } from 'zod';
 
 export type RESTHandler = (
   req: Request,
@@ -49,6 +49,14 @@ const verifyApiKey = async (
   next();
 };
 
+const prettifyError = (error: ZodIssue) => {
+  return {
+    field: error.path.join('.'),
+    message: error.message,
+    code: error.code,
+  };
+};
+
 const validateSchema =
   (schema: ZodSchema | undefined) =>
   (req: Request, res: Response, next: NextFunction) => {
@@ -58,17 +66,29 @@ const validateSchema =
         next();
         return;
       } else {
-        const errors = result.error.errors.map((error) => ({
-          message: error.message,
-        }));
         return res.status(400).json({
           error: 'Invalid request body',
-          details: errors,
+          details: result.error.errors.map(prettifyError),
         });
       }
     }
     next();
   };
+
+const logging = (req: Request, res: Response, next: NextFunction) => {
+  const start = Date.now();
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(
+      `${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`,
+    );
+  });
+
+  next();
+};
+
+server.use(logging);
 
 /** @type {import('./Helpers/Databases')} */
 const importAllHandlers = async (path: string, failedImports: string[]) => {
@@ -158,3 +178,5 @@ process.on('unhandledRejection', (reason, p) => {
   console.trace('Unhandled Rejection at: Promise', p, 'reason:', reason);
   // application specific logging, throwing an error, or other logic here
 });
+
+export default server;

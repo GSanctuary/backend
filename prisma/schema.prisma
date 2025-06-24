@@ -6,7 +6,6 @@ datasource db {
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
-  output        = "../generated/client"
 }
 
 model User {
@@ -17,6 +16,7 @@ model User {
   AIConversations AIConversation[]
   Recipes         Recipe[]
   Task            Task[]
+  StickyNotes     StickyNote[]
 }
 
 model AIConversation {
@@ -59,4 +59,14 @@ model Task {
   user      User     @relation(fields: [userId], references: [id])
   name      String
   completed Boolean  @default(false)
+}
+
+model StickyNote {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  metadata  Json
 }
