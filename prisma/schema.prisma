@@ -46,6 +46,8 @@ model Recipe {
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
   name        String
+  ingredients String[]
+  steps       String[]
   description String?
 }
 

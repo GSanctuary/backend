@@ -1,4 +1,9 @@
-import { GenerateContentConfig, GoogleGenAI } from '@google/genai';
+import {
+  GenerateContentConfig,
+  GenerateContentResponse,
+  GoogleGenAI,
+  Type,
+} from '@google/genai';
 import { env } from '../env';
 
 interface Context {
@@ -16,10 +21,37 @@ export const toContext = ({
 
 const ASSISTENT_SYSTEM_INSTRUCTION = `You are a helpful butler. You will be given a context and a prompt. Your task is to generate a response based on the context and the prompt. The context will be in the format of <CONTEXT>...</CONTEXT>. The prompt will be provided after the context. You should not include the context in your response. Your response should be a single string.`;
 
-const DEFAULT_CONFIG: GenerateContentConfig = {
+const COOKING_SYSTEM_INSTRUCTION = `You are an expert at writing recipies for individuals to make at home within reasonable cost ranges, feeding for individuals or families. You will provide ingredients with specific amounts of common units along with detailed steps for all recipies you provide. With each step, ensure to include proper descriptors, the ingredients used, and, if applicable, the amount of time needed for each step. If needed, also provide warnings for common mistakes a person may make.`;
+
+export const DEFAULT_CONFIG: GenerateContentConfig = {
   systemInstruction: ASSISTENT_SYSTEM_INSTRUCTION,
   maxOutputTokens: 4096,
   temperature: 0.5,
+};
+
+export const COOKING_CONFIG: GenerateContentConfig = {
+  systemInstruction: COOKING_SYSTEM_INSTRUCTION,
+  maxOutputTokens: 4096,
+  temperature: 0.5,
+  responseMimeType: 'application/json',
+  responseSchema: {
+    type: Type.OBJECT,
+    properties: {
+      ingredients: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.STRING,
+        },
+      },
+      steps: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.STRING,
+        },
+      },
+    },
+    propertyOrdering: ['ingredients', 'steps'],
+  },
 };
 
 export class GeminiClient {
@@ -65,6 +97,14 @@ export class GeminiClient {
       })
       .catch(this.handleError);
     return response.text ?? 'No response.';
+  };
+
+  recipe = async (item: string): Promise<GenerateContentResponse> => {
+    return this.client.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: `Provide a recipe for: ${item}`,
+      config: this.config,
+    });
   };
 
   private handleError = (error: any): { text: string } => {
