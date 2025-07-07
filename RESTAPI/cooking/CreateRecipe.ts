@@ -5,6 +5,7 @@ import { COOKING_CONFIG, GeminiClient } from '../../services/gemini';
 
 const schema = z.object({
   recipeName: z.string().nonempty().max(100),
+  room: z.number(),
 });
 
 const recipeSchema = z.object({
@@ -17,7 +18,7 @@ const handler: RESTHandler = async (req, res, next) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { recipeName } = schema.parse(req.body);
+  const { recipeName, room } = schema.parse(req.body);
 
   const recipe = await prisma.recipe.findFirst({
     where: {
@@ -39,6 +40,7 @@ const handler: RESTHandler = async (req, res, next) => {
         name: recipeName,
         ...output,
         userId: req.user.id,
+        roomId: room,
       },
     });
     return res.status(201).json({ recipe });

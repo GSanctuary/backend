@@ -4,6 +4,7 @@ import prisma from '../../lib/prisma';
 
 const schema = z.object({
   task: z.string().nonempty().max(100),
+  room: z.number(),
 });
 
 const handler: RESTHandler = async (req, res, next) => {
@@ -11,11 +12,12 @@ const handler: RESTHandler = async (req, res, next) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { task: name } = schema.parse(req.body);
+  const { task: name, room } = schema.parse(req.body);
   const taskInfo = await prisma.task.create({
     data: {
       name,
       userId: req.user.id,
+      roomId: room,
     },
   });
 

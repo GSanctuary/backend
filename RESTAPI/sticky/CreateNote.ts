@@ -5,6 +5,7 @@ import prisma from '../../lib/prisma';
 const schema = z.object({
   content: z.string().min(1, 'Content is required'),
   metadata: z.record(z.string(), z.any()),
+  room: z.number(),
 });
 
 const handler: RESTHandler = async (req, res, next) => {
@@ -13,12 +14,13 @@ const handler: RESTHandler = async (req, res, next) => {
   }
 
   // Implement logic here
-  const { content, metadata } = schema.parse(req.body);
+  const { content, metadata, room } = schema.parse(req.body);
   const note = await prisma.stickyNote.create({
     data: {
       content,
       metadata,
       userId: req.user.id,
+      roomId: room,
     },
   });
 
