@@ -24,19 +24,19 @@ export const sanitizeRoom = (unsanitized: PrismaRoom): SanitizedRoom => {
     throw Error(`Unsanitized room has invalid positions array`);
   }
 
+  const positions: [number, number, number][] = [];
+
+  for (let i = 0; i < unsanitized.positions.length; i += 3) {
+    positions.push([
+      unsanitized.positions[i],
+      unsanitized.positions[i + 1],
+      unsanitized.positions[i + 2],
+    ]);
+  }
+
   return {
     name: unsanitized.name,
     scale: [unsanitized.scaleX, unsanitized.scaleY],
-    positions: unsanitized.positions
-      .map((_, i) =>
-        i % 3 == 0
-          ? ([
-              unsanitized.positions[i],
-              unsanitized.positions[i + 1],
-              unsanitized.positions[i + 2],
-            ] as [number, number, number])
-          : undefined,
-      )
-      .filter((v) => !!v),
+    positions,
   };
 };
