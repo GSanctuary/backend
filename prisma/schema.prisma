@@ -17,6 +17,7 @@ model User {
   Recipes         Recipe[]
   Task            Task[]
   StickyNotes     StickyNote[]
+  Rooms           Room[]
 }
 
 model AIConversation {
@@ -25,6 +26,8 @@ model AIConversation {
   updatedAt DateTime    @updatedAt
   userId    Int
   user      User        @relation(fields: [userId], references: [id])
+  roomId    Int
+  room      Room        @relation(fields: [roomId], references: [id])
   title     String
   AIMessage AIMessage[]
 }
@@ -45,6 +48,8 @@ model Recipe {
   updatedAt   DateTime @updatedAt
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
+  roomId      Int
+  room        Room     @relation(fields: [roomId], references: [id])
   name        String
   ingredients String[]
   steps       String[]
@@ -57,6 +62,8 @@ model Task {
   updatedAt DateTime @updatedAt
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  roomId    Int
+  room      Room     @relation(fields: [roomId], references: [id])
   name      String
   completed Boolean  @default(false)
 }
@@ -67,6 +74,26 @@ model StickyNote {
   updatedAt DateTime @updatedAt
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  roomId    Int
+  room      Room     @relation(fields: [roomId], references: [id])
   content   String
   metadata  Json
+}
+
+model Room {
+  id             Int              @id @default(autoincrement())
+  anchorId       String           @unique
+  positionX      Float
+  positionY      Float
+  positionZ      Float
+  userId         Int
+  user           User             @relation(fields: [userId], references: [id])
+  scaleX         Float
+  scaleZ         Float
+  rotation       Float
+  name           String           @unique
+  AIConversation AIConversation[]
+  Recipe         Recipe[]
+  Task           Task[]
+  StickyNote     StickyNote[]
 }

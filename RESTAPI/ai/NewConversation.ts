@@ -8,6 +8,7 @@ const schema = z.object({
     .string()
     .min(1, 'Title is required')
     .max(100, 'Title must be less than 100 characters'),
+  room: z.number(),
 });
 
 const handler: RESTHandler = async (
@@ -19,12 +20,13 @@ const handler: RESTHandler = async (
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { title } = schema.parse(req.body);
+  const { title, room } = schema.parse(req.body);
 
   const createdConversation = await prisma.aIConversation.create({
     data: {
       userId: req.user.id,
       title,
+      roomId: room,
     },
   });
 
