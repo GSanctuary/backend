@@ -4,7 +4,7 @@ import { sanitizeRoom } from '../../types/room';
 import z from 'zod';
 
 const schema = z.object({
-  roomID: z.number(),
+  anchorId: z.string().nonempty(),
 });
 
 const handler: RESTHandler = async (req, res, next) => {
@@ -12,11 +12,11 @@ const handler: RESTHandler = async (req, res, next) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { roomID } = schema.parse(req.query);
+  const { anchorId } = schema.parse(req.query);
   const room = await prisma.room.findFirst({
     where: {
       userId: req.user.id,
-      id: roomID,
+      anchorId,
     },
   });
 

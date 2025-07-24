@@ -4,7 +4,7 @@ import prisma from '../../lib/prisma';
 import { z } from 'zod';
 
 const schema = z.object({
-  name: z.string().nonempty(),
+  anchorId: z.string().nonempty(),
 });
 
 const handler: RESTHandler = async (
@@ -15,16 +15,15 @@ const handler: RESTHandler = async (
   if (!req.user) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  const name = schema.parse(req.query).name;
+  const anchorId = schema.parse(req.query).anchorId;
   const r = await prisma.room.findFirst({
-    where: { name, userId: req.user.id },
+    where: { anchorId, userId: req.user.id },
   });
   if (!r) {
     return res.status(404).json({ error: 'Cannot find room for user' });
   }
   await prisma.recipe.delete({
     where: {
-      name,
       userId: req.user.id,
       id: r.id,
     },

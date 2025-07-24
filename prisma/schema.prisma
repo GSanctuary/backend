@@ -81,15 +81,19 @@ model StickyNote {
 }
 
 model Room {
-  id              Int              @id @default(autoincrement())
-  positions       Float[]
-  userId          Int
-  user            User             @relation(fields: [userId], references: [id])
-  scaleX          Float
-  scaleY          Float
-  name            String
-  AIConversations AIConversation[]
-  Recipes         Recipe[]
-  Task            Task[]
-  StickyNotes     StickyNote[]
+  id             Int              @id @default(autoincrement())
+  anchorId       String           @unique
+  positionX      Float
+  positionY      Float
+  positionZ      Float
+  userId         Int
+  user           User             @relation(fields: [userId], references: [id])
+  scaleX         Float
+  scaleZ         Float
+  rotation       Float
+  name           String           @unique
+  AIConversation AIConversation[]
+  Recipe         Recipe[]
+  Task           Task[]
+  StickyNote     StickyNote[]
 }

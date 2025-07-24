@@ -1,5 +1,5 @@
 export type SanitizedRoom = {
-  positions: [number, number, number][];
+  position: [number, number, number];
   scale: [number, number];
   widgets?: {
     aiConversations: number[];
@@ -8,35 +8,29 @@ export type SanitizedRoom = {
     stickyNotes: number[];
   };
   name: string;
+  anchorId: string;
+  rotation: number;
 };
 
 type PrismaRoom = {
   name: string;
+  anchorId: string;
   id: number;
   userId: number;
-  positions: number[];
+  positionX: number;
+  positionY: number;
+  positionZ: number;
+  rotation: number;
   scaleX: number;
-  scaleY: number;
+  scaleZ: number;
 };
 
 export const sanitizeRoom = (unsanitized: PrismaRoom): SanitizedRoom => {
-  if (unsanitized.positions.length % 3 != 0) {
-    throw Error(`Unsanitized room has invalid positions array`);
-  }
-
-  const positions: [number, number, number][] = [];
-
-  for (let i = 0; i < unsanitized.positions.length; i += 3) {
-    positions.push([
-      unsanitized.positions[i],
-      unsanitized.positions[i + 1],
-      unsanitized.positions[i + 2],
-    ]);
-  }
-
   return {
     name: unsanitized.name,
-    scale: [unsanitized.scaleX, unsanitized.scaleY],
-    positions,
+    scale: [unsanitized.scaleX, unsanitized.scaleZ],
+    position: [unsanitized.positionX, unsanitized.positionY, unsanitized.positionZ],
+    anchorId: unsanitized.anchorId,
+    rotation: unsanitized.rotation,
   };
 };

@@ -4,12 +4,11 @@ import prisma from '../../lib/prisma';
 import { sanitizeRoom } from '../../types/room';
 
 const schema = z.object({
-  positions: z
-    .array(z.tuple([z.number(), z.number(), z.number()]))
-    .min(1, 'There must be at least one position')
-    .max(100, 'Too many positions (are you sure this is correct?)'),
+  position: z.tuple([z.number(), z.number(), z.number()]),
   scale: z.tuple([z.number(), z.number()]),
+  rotation: z.number(),
   name: z.string().max(100).nonempty(),
+  anchorId: z.string().nonempty(),
 });
 
 const handler: RESTHandler = async (req, res, next) => {
@@ -17,22 +16,18 @@ const handler: RESTHandler = async (req, res, next) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { positions, scale, name } = schema.parse(req.body);
-
-  const r = await prisma.room.findFirst({
-    where: { name, userId: req.user.id },
-  });
-
-  if (!!r) {
-    return res.status(404).json({ error: 'Room names must be unique' });
-  }
+  const { position, scale, rotation, name, anchorId } = schema.parse(req.body);
 
   const room = await prisma.room.create({
     data: {
-      positions: positions.flat(1),
+      positionX: position[0],
+      positionY: position[1],
+      positionZ: position[2],
       scaleX: scale[0],
-      scaleY: scale[1],
+      scaleZ: scale[1],
       name,
+      anchorId,
+      rotation,
       userId: req.user.id,
     },
   });
