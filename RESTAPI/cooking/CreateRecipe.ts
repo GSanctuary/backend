@@ -5,7 +5,7 @@ import { COOKING_CONFIG, GeminiClient } from '../../services/gemini';
 
 const schema = z.object({
   recipeName: z.string().nonempty().max(100),
-  room: z.number(),
+  room: z.string().nonempty(),
 });
 
 const recipeSchema = z.object({

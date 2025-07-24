@@ -5,7 +5,7 @@ import prisma from '../../lib/prisma';
 const schema = z.object({
   content: z.string().min(1, 'Content is required'),
   metadata: z.record(z.string(), z.any()),
-  room: z.number(),
+  room: z.string().nonempty(),
 });
 
 const handler: RESTHandler = async (req, res, next) => {
