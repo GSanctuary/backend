@@ -26,8 +26,8 @@ model AIConversation {
   updatedAt DateTime    @updatedAt
   userId    Int
   user      User        @relation(fields: [userId], references: [id])
-  roomId    Int
-  room      Room        @relation(fields: [roomId], references: [id])
+  roomId    String
+  room      Room        @relation(fields: [roomId], references: [anchorId])
   title     String
   AIMessage AIMessage[]
 }
@@ -48,8 +48,8 @@ model Recipe {
   updatedAt   DateTime @updatedAt
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
-  roomId      Int
-  room        Room     @relation(fields: [roomId], references: [id])
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [anchorId])
   name        String
   ingredients String[]
   steps       String[]
@@ -62,8 +62,8 @@ model Task {
   updatedAt DateTime @updatedAt
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
-  roomId    Int
-  room      Room     @relation(fields: [roomId], references: [id])
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [anchorId])
   name      String
   completed Boolean  @default(false)
 }
@@ -74,8 +74,8 @@ model StickyNote {
   updatedAt DateTime @updatedAt
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
-  roomId    Int
-  room      Room     @relation(fields: [roomId], references: [id])
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [anchorId])
   content   String
   metadata  Json
 }
